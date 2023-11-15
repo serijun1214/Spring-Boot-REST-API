@@ -1,5 +1,6 @@
 package com.example.SpringBootRESTAPI.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,13 +11,13 @@ import com.example.SpringBootRESTAPI.model.Item;
 @Service
 public class ItemService {
 	
-	private List<Item> allItems = Arrays.asList(
+	private List<Item> allItems = new ArrayList<> (Arrays.asList(
 			new Item("10001", "ネックレス", "ジュエリ"),
 			new Item("10002", "パーカー", "ファッション"),
 			new Item("10003", "フェイスクリーム", "ビューティー"),
 			new Item("10004", "サプリメント", "ヘルス"),
 			new Item("10005", "ブルーベリー", "フード")
-			);
+			));
 	
 	public List<Item> getAllItems() {
 		return allItems;
@@ -29,5 +30,17 @@ public class ItemService {
 			}
 		}
 		return null;
+	}
+	
+	public void addItem (Item item) {
+		allItems.add(item);
+	}
+
+	public void updateItem(String itemId, Item item) {
+		for(int i=0; i<allItems.size(); i++) {
+			if(allItems.get(i).getItemId().equals(itemId)) {
+				allItems.set(i, item);
+			}
+		}
 	}
 }
