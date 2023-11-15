@@ -1,50 +1,43 @@
 package com.example.SpringBootRESTAPI.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.SpringBootRESTAPI.model.Item;
+import com.example.SpringBootRESTAPI.repo.ItemRepository;
 
 @Service
 public class ItemService {
 	
-	private List<Item> allItems = new ArrayList<> (Arrays.asList(
-			new Item("10001", "ネックレス", "ジュエリ"),
-			new Item("10002", "パーカー", "ファッション"),
-			new Item("10003", "フェイスクリーム", "ビューティー"),
-			new Item("10004", "サプリメント", "ヘルス"),
-			new Item("10005", "ブルーベリー", "フード")
-			));
+	@Autowired
+	private ItemRepository itemRepository;
 	
 	public List<Item> getAllItems() {
+		List<Item> allItems = new ArrayList<>();
+		itemRepository.findAll().forEach(allItems::add);
+		
 		return allItems;
 	}
 	
-	public Item getItem(String itemId) {
-		for(int i=0; i<allItems.size(); i++) {
-			if(allItems.get(i).getItemId().equals(itemId)) {
-				return (Item)allItems.get(i);
-			}
-		}
-		return null;
+	public Optional<Item> getItem(Long itemId) {
+		return itemRepository.findById(itemId);
 	}
 	
 	public void addItem (Item item) {
-		allItems.add(item);
+		itemRepository.save(item);
 	}
 
-	public void updateItem(String itemId, Item item) {
-		for(int i=0; i<allItems.size(); i++) {
-			if(allItems.get(i).getItemId().equals(itemId)) {
-				allItems.set(i, item);
-			}
+	public void updateItem(Long itemId, Item item) {
+		if(itemRepository.findById(itemId).get() != null) {
+			itemRepository.save(item);
 		}
 	}
 
-	public void deleteItem(String itemId) {
-		allItems.removeIf(i -> i.getItemId().equals(itemId));
+	public void deleteItem(Long itemId) {
+		itemRepository.deleteById(itemId);	
 	}
 }

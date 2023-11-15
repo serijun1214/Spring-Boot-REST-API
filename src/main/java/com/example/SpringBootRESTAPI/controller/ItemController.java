@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.SpringBootRESTAPI.exception.ItemNotFoundException;
 import com.example.SpringBootRESTAPI.model.Item;
 import com.example.SpringBootRESTAPI.service.ItemService;
 
@@ -27,8 +28,8 @@ public class ItemController {
 	}
 	
 	@GetMapping("/items/{itemId}")
-	public Item getItem(@PathVariable("itemId") String itemId) {
-		return itemService.getItem(itemId);
+	public Item getItem(@PathVariable("itemId") Long itemId) {
+		return itemService.getItem(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
 	}
 	
 	@PostMapping("/items")
@@ -39,12 +40,12 @@ public class ItemController {
 	@PutMapping("/items/{itemId}")
 	public void updateItem(
 			@RequestBody Item item, 
-			@PathVariable("itemId") String itemId) {
+			@PathVariable("itemId") Long itemId) {
 		itemService.updateItem(itemId, item);
 	}
 	
 	@DeleteMapping("/items/{itemId}")
-	public void deleteItem (@PathVariable("itemId") String itemId) {
+	public void deleteItem (@PathVariable("itemId") Long itemId) {
 		itemService.deleteItem(itemId);
 	}
 }
